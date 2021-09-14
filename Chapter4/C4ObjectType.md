@@ -1,5 +1,5 @@
 # Chapter 4
-daject typ3 introduction
+data object type introduction
 
 ## Number
 
@@ -11,7 +11,7 @@ str(): a function used to convert the data type into **string**
 
 len(): a function used to return the length of the **string**
 
-Sometime if we wanna know the number of digits of some big number, we could use:
+Sometimes if we wanna know the number of digits of some big number, we could use:
 
 `len(str(1234567890))`
 
@@ -40,6 +40,7 @@ Sometime if we wanna know the number of digits of some big number, we could use:
 	>>> math.ceil(4/-3)
 	-1
 	`
+	3. `math.sqrt(x) & math.pow(x,y)`
 
 ### import random
 
@@ -70,7 +71,7 @@ Return a random integer N such that a <= N <= b. Alias for randrange(a, b+1).
 
 4. `random.choice(seq) & random.choices(seq,weights,k)`
 
-**choices 与 sample的区别是： choices会重复1取，而sample不会重复取（重复取即取同一个位置上的元素）**
+**choices 与 sample的区别是： choices会重复1取，而sample不会重复取（重复取即取同一个位置上的元素,如果seq长度小于k或者k为负数，会报错）**
 
 Return a random element from the non-empty sequence seq. If seq is empty, raises *IndexError*.
 
@@ -385,4 +386,212 @@ SyntaxError: EOL while scanning string literal
 `
 
 字符串前加r表示去掉反斜杠转义机制， 该方法对诸如Windows下的文件路径的表示十分有用。
+
+8. Unicode support
+python 支持Unicode字符串形式，从而支持国际化的字符文本。（了解就好）
+
+9. 模式匹配 **//TODO More, Search for module `re`**
+	`import re`
+
+## List
+
+任意类型对象的位置相关的有序集合，没有固定大小，且列表可变
+
+### Sequence Operation
+
+支持所有字符串的序列操作，区别是其结果是一个list而不是string。
+
+### Unique Function
+
+1. list.append(x): Add an item to the end of the list. Equivalent to a[len(a):] = [x]
+2. list.pop([index]): Remove the item at the given position in the list, and return it. If no index is specified, a.pop() removes and returns *the last item* in the list
+
+`>>> lst`
+`[1, 2, 3, 4, 5]`
+`>>> lst.pop(2)`
+`3`
+`>>> lst`
+`[1, 2, 4, 5]`
+`>>> lst.insert(2,3)`
+`>>> lst`
+`[1, 2, 3, 4, 5]`
+`>>> del lst[2]`
+`>>> lst`
+`[1, 2, 4, 5]`
+
+**Equals to `del list[index]`**
+
+3. list.insert(i,x):Insert an item at a given position. The first argument is the index of the element before which to insert, so a.insert(0, x) inserts at the front of the list, and a.insert(len(a), x) is equivalent to a.append(x)
+`>>> lst`
+`[1, 2, 3, 4, 5]`
+`>>> lst.insert(0,0)`
+`>>> lst`
+`[0, 1, 2, 3, 4, 5]`
+`>>> lst.remove(0)`
+`>>> lst`
+`[1, 2, 3, 4, 5]`
+`>>> lst.insert(1,6)`
+`>>> lst`
+`[1, 6, 2, 3, 4, 5]`
+
+4. list.remove(x):Remove the *first* item from the list whose value is equal to x. *It raises a ValueError if there is no such item*
+
+5. list.extend(iterable): Extend the list by appending all the items from the iterable. Equivalent to a[len(a):] = iterable
+
+`>>> lst`
+`[1, 2, 4, 5]`
+`>>> tail = [6,7,8,9]`
+`>>> lst.extend(tail)`
+`>>> lst`
+`[1, 2, 4, 5, 6, 7, 8, 9]`
+
+6. list.clear(): Remove all items from the list. Equivalent to del a[:].
+
+7. list.count(x): Return the number of times x appears in the list.
+
+8. list.reverse(): Reverse the elements of the list in place.
+
+9.  list.sort(`*`, key=None, reverse=False): Sort the items of the list in place.
+
+10. sum(iterator): return the sum of the elements in the list(kind of iterator), *int and list with mix data type is not allowed*.
+
+### Border Check
+Even though the list have a flexible dynamic size, using an element that does not exist is not allowed! for example, use x = list[index] where index<0 or index >= len(list) will raise a *IndexError indicating that index out of range*.
+
+### 嵌套
+Python 支持任意的嵌套，list中嵌套dict，dict嵌套list等，实现矩阵就是list嵌套list。**//TODO Numpy**
+
+### List Comprehension Expression
+
+
+## Dictionary
+一种映射，具有可变性。通过key来存储对象。
+
+Unlike sequences, which are indexed by a range of numbers, dictionaries are indexed by **keys**, which can be any immutable(不可变的) type; *strings* and *numbers* can always be keys. ***Tuples** can be used as keys if they contain only strings, numbers, or tuples*; if a tuple contains any mutable object either directly or indirectly, it cannot be used as a key. *You can’t use lists as keys, since lists can be modified in place*
+
+### Mapping Operation
+
+1. It is best to think of a dictionary as a set of *key: value* pairs, with the requirement that the keys are **unique (within one dictionary)**. 
+2. A pair of braces creates an empty dictionary: *{}*. Placing a comma-separated list of key:value pairs within the braces adds initial key:value pairs to the dictionary; this is also the way dictionaries are written on output.
+
+3. The main operations on a dictionary are *storing a value with some key and extracting the value given the key*. 
+4. It is also possible to delete a key:value pair with `del`. 
+5. If you store using a key that is already in use, the old value associated with that key is *forgotten*. 
+6. It is an error to extract a value using a *non-existent key*.
+
+
+```
+>>> dt={}
+>>> dt[('first',1)]='apple'
+>>> dt
+{('first', 1): 'apple'}
+>>> dt[('second',2)]='pear'
+>>> dt[('third',3)]='peach'
+>>> dt[('forth',4)]='mango'
+>>> dt
+{('first', 1): 'apple', ('second', 2): 'pear', ('third', 3): 'peach', ('forth', 4): 'mango'}
+
+```
+#### `list(dict)`
+returns a list of all the keys used in the dictionary,
+if want it sorted, just use **sorted(dict)**
+
+```
+list(dt)
+[('first', 1), ('second', 2), ('third', 3), ('forth', 4)]
+>>> sorted(dt)
+[('first', 1), ('forth', 4), ('second', 2), ('third', 3)]
+
+```
+dict.keys() could return the keys sequence as well
+D.keys() -> a set-like object providing a view on D's keys
+```
+dt.keys()
+dict_keys(['apple', 'pear', 'peach'])
+>>> list(dt)
+['apple', 'pear', 'peach']
+```
+
+#### `in` operator used to check whether a given key is in the dictionary.
+
+```
+>>> check = ('first',1) in dt
+>>> check
+True
+>>> check = ('first',2) in dt
+>>> check
+False
+```
+
+`dict.get(key, default=None, /) method`
+Return the value for key if key is in the dictionary, else default.
+``` 
+dt.get('apple',0)
+1
+>>> dt.get('apple',1)
+1
+>>> dt.get('mango',1)
+1
+>>> dt.get('mango',0)
+0
+>>> dt.get('mango')
+```
+
+#### `dict()`
+constructor used to create a dict. it can build dictionaries directly from *sequences of key-value pairs*
+
+```
+dt = dict([('sape',4396),('guido',4127),('jack',4098)])
+>>> dt
+{'sape': 4396, 'guido': 4127, 'jack': 4098}
+```
+
+or When the keys are simple strings, can use keyword arguments:
+
+```
+>>> dt = dict(apple=1,pear=2,peach=3,banana=4)
+>>> dt
+{'apple': 1, 'pear': 2, 'peach': 3, 'banana': 4}
+
+```
+
+or, use `zip()`:
+
+```
+>>> dt = dict(zip(['apple','pear','peach'],[1,2,3]))
+>>> dt
+{'apple': 1, 'pear': 2, 'peach': 3}
+
+
+```
+
+#### looping techniques: dict.items()
+
+1. When looping through dictionaries, the key and corresponding value can be retrieved at the same time using the *items()* method
+
+```
+>>> dt
+{'apple': 1, 'pear': 2, 'peach': 3, 'banana': 4}
+>>> for k,v in dt.items():
+...     print(k,v)
+... 
+apple 1
+pear 2
+peach 3
+banana 4
+```
+2. When looping through a *sequence*, the position index and corresponding value can be retrieved at the same time using the *enumerate()* function
+
+```
+>>> seq = ['apple','pear','peach','banana']
+>>> seq
+['apple', 'pear', 'peach', 'banana']
+>>> for i,elm in enumerate(seq):
+...     print(i,elm)
+... 
+0 apple
+1 pear
+2 peach
+3 banana
+```
 
