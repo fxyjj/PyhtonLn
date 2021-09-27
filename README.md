@@ -12,3 +12,8 @@ introduce the main data and object type in python.
 (2021/09/13)-- list
 (2021/09/14)-- dictionary
 (2021/09/15)-- 文件，元组，集合
+(2021/09/27)-- 剩余内容
+
+>> C5NumberType.md
+
+Details about the Number type
