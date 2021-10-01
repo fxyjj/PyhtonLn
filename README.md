@@ -19,3 +19,4 @@ introduce the main data and object type in python.
 Details about the Number type
 
 * (2021/09/28) -- 数字的实际应用与除法
+* (2021/10/01) -- 除法与进制，按位操作
