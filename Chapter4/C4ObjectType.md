@@ -70,7 +70,7 @@ Return a random integer N such that a <= N <= b. Alias for randrange(a, b+1).
 
 4. `random.choice(seq) & random.choices(seq,weights,k)`
 
-**choices 与 sample的区别是： choices会重复1取，而sample不会重复取（重复取即取同一个位置上的元素,如果seq长度小于k或者k为负数，会报错）**
+**choices 与 sample的区别是： choices会重复取，而sample不会重复取（重复取即取同一个位置上的元素,如果seq长度小于k或者k为负数，会报错）**
 
 Return a random element from the non-empty sequence seq. If seq is empty, raises *IndexError*.
 
@@ -410,6 +410,24 @@ python 支持Unicode字符串形式，从而支持国际化的字符文本。（
 	`import re`
 
 ## 3. List
+
+**list 的深拷贝与浅拷贝： `l=[[0]*3]*4 创建的数组里面的元素也为数组，里面的数组元素为浅拷贝，即所有的数组元素都指向一个地址，所以修改其中一个元素的值，其他元素的对应位置也会被修改，我们需要使用生成器来辅助创建独立地址的数组对象`**
+eg:
+```
+>>> l = [[0]*3]*4
+>>> l
+[[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
+>>> l[0][0]=2
+>>> l
+[[2, 0, 0], [2, 0, 0], [2, 0, 0], [2, 0, 0]]
+
+>>> l = [[0 for _ in range(3)] for _ in range(4)]
+>>> l
+[[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
+>>> l[0][0]=1
+>>> l
+[[1, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
+```
 
 任意类型对象的位置相关的有序集合，没有固定大小，且列表可变
 

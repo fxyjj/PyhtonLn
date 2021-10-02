@@ -10,7 +10,7 @@ details about the Number type
 
 在Python3中， 只有整数一种类型，即上述两种已经被合并在一起了。
 
-### 1.2 浮点数
+### 1.2 浮点数 (浮点数的精度问题可以由小数对象(显示)和分数(运算)对象来解决，参见下面的小数与分数)
 
 浮点数带小数点，或者科学记数法的e或者E
 
@@ -121,7 +121,7 @@ False
 
 ```
 
-**需要注意的是， 浮点数的比较不总是会符合语气，如, 
+**需要注意的是， 浮点数的比较不总是会符合预期，如, 
 ```
 >>> 1.1+2.2
 3.3000000000000003
@@ -231,4 +231,215 @@ from math import *
 13
 >>> 
 ```
+
+## 8. Useful Tools
+
+### 8.1 内置
+
+1. pow() 返回指数幂值
+
+```
+>>> pow(2,2) # 2的2次幂
+4
+```
+
+2. abs() 返回绝对值
+
+```
+>>> abs(-3)
+3
+>>> abs(3)
+3
+```
+
+3. sum(iterable) 返回迭代器内元素的和(一般是list 和 tuple, 集合与字典也可以应用该函数，其中*字典*返回其keys的和,但只有在key为int时可用;*集合*内相同元素只计算一次)
+```
+>>> sum([1,2,3])
+6
+>>> sum((1,2,3))
+6
+>>> sum({1:10,2:20,3:30})
+6
+>>> dt
+{(1, 2): 'a', (1, 1): 'b', (2, 1): 'c', (2, 2): 'd'}
+>>> sum(dt)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: unsupported operand type(s) for +: 'int' and 'tuple'
+>>> sum({1,2,2,3,4})
+10
+```
+4. max() & min() 
+
+max(): 返回iterable中的最大值或多个元素中的。
+min(): 最小值
+
+```
+>>> max(1,2,3,4,5)
+5
+>>> min(1,2,3,4,5)
+1
+>>> max([1,2,3,4])
+4
+>>> min([1,2,3,4])
+1
+>>> max((1,2,3,4))
+4
+>>> min((1,2,3,4))
+1
+>>> max('a','b','c')
+'c'
+>>> min('a','b','c')
+'a'
+>>> d
+[(1, (1, 1)), (2, (1, 2)), (30, (2, 1)), (5, (2, 2))]
+>>> max((elm[1] for elm in d), key = lambda x: x[0]) # 匿名函数在max中的应用， min中同样适用
+(2, 1)
+```
+
+5. from math import *
+
+* math.pi, 圆周率
+
+* math.e, 自然常数
+
+* math.sin(),math.cos() .. 三角函数
+
+(更多该模块内的函数可以参考上一章)
+* math.sqrt() 求平方根 
+
+```>>> import math
+>>> math.sqrt(144)
+12.0
+>>> pow(144,0.5)
+12.0
+>>> 144**0.5
+12.0
+```
+
+**math模块为外部组建，其中的函数需要在导入math包过后才能使用，而像abs(),max() 等内置函数位于一个隐藏的命名空间(builtins in Python3, __builtin__ in Python2)内，Python会在该命名空间内自动搜索程序的名称**
+
+6. from random import *
+
+(参见上一章)
+
+
+## 9.小数
+
+Python2.4 过后引入了小数对象，其名称为*Decimal*，创建小数对象需要导入decimal模块，字面量表达式无法直接创建小数。
+
+**小数对象很像浮点数，但是其具有固定的位数和小数点，换句话说，小数是固定精度的浮点数。**
+
+* from decimal import Decimal
+
+```
+>>> from decimal import Decimal
+>>> 0.1+0.1
+0.2
+>>> 0.1+0.1+0.1-0.3
+5.551115123125783e-17
+>>> Decimal('0.1')+Decimal('0.1')+Decimal('0.1')-Decimal('0.3')
+Decimal('0.0')
+```
+**小数对象对表达固定精度的特性（货币的累加）以及实现更好的数值精度而言，是一个理想的工具**
+
+```
+>>> Decimal('0.1')+Decimal('0.10')
+Decimal('0.20')
+```
+*值得注意的是，在创建Decimal小数对象时需要传入一个表示小数的字符串，在混合表达式运算时，Python也会自动将操作书转换为最高精度的小数进行运算。*
+
+* 在后续Python版本中（version>=3.1 or 2.7), 也可以通过
+
+`decimal.Decimal.from_float(1.1)` 来创建小数对象，而最新版本的Python可以直接使用float来创建小数：`Decimal(1.1)`,
+**但有时会产生默认且庞大的小数位数**
+```
+>>> Decimal.from_float(1.2)
+Decimal('1.1999999999999999555910790149937383830547332763671875')
+>>> Decimal(0.1)
+Decimal('0.1000000000000000055511151231257827021181583404541015625')
+```
+
+* 设置全局小数精度
+
+decimal.getcontext().prec = 4 (该值不能为负，否则报错：valid range for prec is [1, MAX_PREC])
+
+该操作可以指定**所有创建**的小数保留4为小数。
+
+``` import decimal
+
+>>> decimal.Decimal(1)/decimal.Decimal(7)
+Decimal('0.1428571428571428571428571429')
+
+>>> decimal.getcontext().prec=4
+
+>>> decimal.Decimal(1)/decimal.Decimal(7)
+Decimal('0.1429')
+```
+
+* 上下文管理器 
+
+在python2.6 和 3.0 版本中，with关键词可以临时修改小数精度，在with语句退出时，小数对象会重新应用全局精度。
+
+```
+>>> import decimal
+
+>>> decimal.Decimal('1.00')/decimal.Decimal('3.00')
+Decimal('0.3333333333333333333333333333')
+
+>>> with decimal.localcontext() as ctx:
+...     ctx.prec = 2
+...     decimal.Decimal('1.00')/decimal.Decimal('3.00')
+... 
+Decimal('0.33')
+
+>>> decimal.Decimal('1.00')/decimal.Decimal('3.00')
+Decimal('0.3333333333333333333333333333')
+>>> 
+```
+
+## 10. 分数
+
+2.6 与 3.0 首次引入了Fraction类型，即分数，一个有理数对象，显式地保持一个分子和分母，避免了浮点数在算术运算时的不精确性与局限性。
+
+* 创建
+```
+>>> x = Fraction(1,3)
+>>> y = Fraction(1,6)
+>>> x
+Fraction(1, 3)
+>>> y
+Fraction(1, 6)
+>>> print(x)
+1/3
+>>> print(y)
+1/6
+```
+同样类似的，分数也可以通过浮点数字符串来创建
+
+```
+>>> Fraction('.5')
+Fraction(1, 2)
+>>> Fraction('.25')
+Fraction(1, 4)
+```
+
+* 运算 与其他数值类型等同时之
+```
+>>> x+y
+Fraction(1, 2)
+>>> print(x+y)
+1/2
+>>> print(x-y)
+1/6
+>>> print(x*y)
+1/18
+>>> print(x/y)
+2
+>>> print(Fraction(2,1))
+2
+```
+
+* 对于在给定内存空间内无法精确表示的值，浮点数的限制很明显，而小数与分数都能提供比浮点数更为直观的和准确的结果，通过有理数表示和限制精度。但是后两者需要一个额外的代码冗余和速度的代价。
+
 
