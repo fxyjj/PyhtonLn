@@ -442,4 +442,341 @@ Fraction(1, 2)
 
 * 对于在给定内存空间内无法精确表示的值，浮点数的限制很明显，而小数与分数都能提供比浮点数更为直观的和准确的结果，通过有理数表示和限制精度。但是后两者需要一个额外的代码冗余和速度的代价。
 
+* 对于混合类型的表达式，有时候需要手动的传递Fraction才能确保精度
+```
+>>> x = Fraction(1,3)
+>>> x+2.0
+2.3333333333333335
+>>> x+1./3
+0.6666666666666666
+
+>>> x + Fraction(4.,3)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/home/fxyj/anaconda3/lib/python3.7/fractions.py", line 174, in __new__
+    raise TypeError("both arguments should be "
+TypeError: both arguments should be Rational instances
+
+>>> x + Fraction(4,3)
+Fraction(5, 3)
+>>>
+```
+**Fraction 的两个参数（分子和分母）必须为整数**
+
+* 浮点数在转换成分数时有时候会有精度损失，因为有可能这个数在浮点数表示时就不够精确，我们可以限制分数的最大分母来简化该结果：
+```
+>>> x + Fraction(4,3)
+Fraction(5, 3)
+>>> f = 2.5
+>>> f.as_integer_ratio()
+(5, 2)
+>>> (4.0/3).as_integer_ratio()
+(6004799503160661, 4503599627370496)
+>>> fn = (4.0/3).as_integer_ratio()
+>>> fnf = Fraction(*fn)
+>>> fnf.limit_denominator()
+Fraction(4, 3)
+>>> 
+```
+## 11.集合
+
+一些唯一不可变对象的集合体。其中不包含重复元素，即一个元素只能出现一次，不管它被添加多少次。
+
+### 11.1 创建
+
+* set()
+
+```
+>>> s = set('abcde')
+>>> s
+{'e', 'a', 'c', 'd', 'b'}
+```
+*可以看到元素并没有顺序*
+
+## 11.2 运算
+
+* 集合可以通过表达式运算符支持一般的数学操作（列表字典和元组不行）
+
+```
+>>> x = set('abcde')
+>>> y = set('bdxyz')
+>>> x
+{'e', 'a', 'c', 'd', 'b'}
+>>> y
+{'z', 'd', 'y', 'x', 'b'}
+
+>>> x - y # 差集
+{'c', 'a', 'e'}
+
+>>> x | y # 并集
+{'z', 'e', 'a', 'c', 'd', 'y', 'x', 'b'}
+
+>>> x & y # 交集
+{'d', 'b'}
+
+>>> x ^ y # XOR ( x|y - x&y ,筛选的元素要么在x,要么在y, 不包含共同拥有的元素)
+{'c', 'z', 'e', 'y', 'x', 'a'}
+
+>>> x > y # y是否为x的真子集，>= 则包含集合本身
+False
+
+>>> x < y # 与上同
+False
+```
+
+* in 成员测试关键词
+
+in表达式可以应用于所有的集合体类型中，其目的时测试测试成员。
+
+### 11.3 set的方法
+
+* set.add(val), 插入一个元素
+
+* set.update(otherset) 原位置求并集， 即一次性加入多个元素（相同元素只记一次）
+
+* set.remove(val) 根据值val删除一个元素, val 若不在集合中，会报错KeyError
+
+* set.union(otherset), 与 & 相同
+
+* set.intersection(otherset), 与 | 相同
+
+* set. issubset(otherset), 判断`set < otherset`
+
+```
+>>> x
+{'e', 'a', 'c', 'd', 'b'}
+>>> y
+{'z', 'd', 'y', 'x', 'b'}
+
+>>> x.remove('f')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+KeyError: 'f'
+
+>>> x.intersection(y)
+{'d', 'b'}
+>>> y.intersection(x)
+{'d', 'b'}
+>>> x & y
+{'d', 'b'}
+
+>>> x.union(y)
+{'z', 'e', 'a', 'c', 'd', 'y', 'x', 'b'}
+>>> y.union(x)
+{'z', 'e', 'a', 'c', 'd', 'y', 'x', 'b'}
+>>> x | y
+{'z', 'e', 'a', 'c', 'd', 'y', 'x', 'b'}
+
+
+>>> x.remove('f')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+KeyError: 'f'
+>>> x.remove('a')
+>>> x
+{'e', 'c', 'd', 'b'}
+
+>>> x.add('a')
+>>> x
+{'e', 'a', 'c', 'd', 'b'}
+
+>>> x.update(y)
+>>> x
+{'z', 'e', 'a', 'c', 'd', 'y', 'x', 'b'}
+
+>>> x - y 
+{'c', 'a', 'e'}
+
+>>> x .remove(y)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+KeyError: {'z', 'd', 'y', 'x', 'b'}
+
+>>> x
+{'z', 'e', 'a', 'c', 'd', 'y', 'x', 'b'}
+>>> x = x - y
+>>> x
+{'c', 'a', 'e'}
+>>> y
+{'z', 'd', 'y', 'x', 'b'}
+>>> x.issubset(y)
+False
+>>> x < y
+False
+```
+
+### 11.4 集合字面量
+
+* Python3.X 中可以使用花括号来创建集合，便于创建结构已知的集合。
+* 但是在**所有**Python版本中，**花括号 {} 都表示字典**，所以空的集合不能通过字面量的方式来创建，只能通过set函数
+
+* 通过字面量创建的集合的方法与上述使用set创建的集合所有方法都通用，但是字面量集合的一些方法可以支持表达式不支持的可迭代对象操作数。
+```
+>>> x = set([1,2,3,4])
+>>> x
+{1, 2, 3, 4}
+
+>>> {1,2,3} | {3,4}
+{1, 2, 3, 4}
+
+>>> {1,2,3} | [3,4]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: unsupported operand type(s) for |: 'set' and 'list'
+
+>>> {1,2,3}.union({3,4})
+{1, 2, 3, 4}
+
+>>> {1,2,3}.union([3,4])
+{1, 2, 3, 4}
+
+>>> {1,2,3}.union((3,4))
+{1, 2, 3, 4}
+
+>>> {1,2,3}.union(dict(zip([3,4],['a','b'])))
+{1, 2, 3, 4}
+
+# union和intersection,issubset方法支持参数类型 集合，数组，元组，字典(字典的键值进行运算)等 
+```
+
+* set.copy()
+```
+>>> x = {1,2,3}
+>>> s = x.add(30)
+>>> s
+
+>>> x
+{1, 2, 3, 30}
+>>> s = x
+>>> s
+{1, 2, 3, 30}
+
+>>> x.remove(30) # 浅拷贝对象s直接指向x的数据地址，所以在x被修改过后s也会变成新的x的值
+>>> s
+{1, 2, 3}
+
+>>> s = x.copy() # copy函数会为s创建一个副本，有自己的物理地址，所以x被修改后不会影响到s
+>>> s
+{1, 2, 3}
+>>> x.add(30)
+>>> x
+{1, 2, 3, 30}
+>>> s
+{1, 2, 3}
+>>> 
+```
+
+### 11.5 不可变性限制与冻结集合
+
+* **集合内的元素必须是不可变的（数字或者字符串，元组），其中元组在集合操作中会比较其完整的值。**
+
+```
+>>> S = set([1,2,3,4,(1,2,3),(4,5,6)])
+
+>>> S
+{1, 2, 3, 4, (1, 2, 3), (4, 5, 6)}
+>>> (1,2,3) in S
+True
+>>> (1,5,3) in S
+False
+
+>>> S.add([1,7,3])
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: unhashable type: 'list'
+
+>>> S.add({1,7,3})
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: unhashable type: 'set'
+
+>>> S.add({1:'a',7:'b',3:'c'})
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: unhashable type: 'dict'
+
+>>> S.add((1,7,3))
+
+>>> S
+{1, 2, 3, 4, (1, 2, 3), (1, 7, 3), (4, 5, 6)}
+>>> 
+```
+
+* frozenset(),用来创建一个不可变的集合对象，可以用来嵌入到其他集合中。
+
+```
+>>> fS = frozenset([1,2,3])
+>>> fS
+frozenset({1, 2, 3})
+
+>>> type(fS)
+<class 'frozenset'>
+
+>>> set(dir(S)) - set(dir(fS))
+{'update', 'intersection_update', 'clear', 'pop', '__isub__', 'difference_update', 'remove', 'discard', 'add', 'symmetric_difference_update', '__iand__', '__ior__', '__ixor__'}
+>>> 
+
+```
+
+*可以看到frzonset类型中没有可以修改set的方法，诸如 add,update,remove 等*
+
+### 11.6 集合在Python的实用意义
+
+* 过滤集合体中的重复项
+
+* 比较集合体之间的差异
+
+* 进行一些与顺序无关的等价性测试
+
+```
+>>> l1,l2 = [1,2,3,4,5],[1,3,4,2,5]
+>>> l1==l2
+False
+>>> set(l1)==set(l2)
+True
+>>> sorted(l1)==sorted(l2)
+True
+>>> l2.sort()
+>>> l2
+[1, 2, 3, 4, 5]
+>>> l1
+[1, 2, 3, 4, 5]
+>>> reverse(l1)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'reverse' is not defined
+>>> reversed(l1)
+<list_reverseiterator object at 0x7f23c4178890>
+>>> print(reversed(l1))
+<list_reverseiterator object at 0x7f23c41788d0>
+>>> for elm in reversed(l1):
+...     print(elm)
+... 
+5
+4
+3
+2
+1
+>>> l1.reverse()
+>>> l1
+[5, 4, 3, 2, 1]
+>>> 'apsm'=='spam',set('asmp')==set('spam')
+(False, True)
+>>> 
+```
+* **由于集合不关心元素的顺序，所以在集合体类型与集合之间的转换过程中,可能会打破原本的顺序**
+```
+>>> l1 = ['1','2','3','4','5']
+>>> sl1 = set(l1)
+
+{'4', '1', '5', '2', '3'}
+>>> l2 = list(sl1)
+>>> l2
+['4', '1', '5', '2', '3']
+>>> 
+```
+
+## 12. bool
+
+* python中有一个名为Bool的显示布尔数据类型， 内部 True 和 False 是该类型的实例，**而bool类型实际上只是内置整数类型的字类，True和False的行为与 0 和 1 是一样的。**
 
