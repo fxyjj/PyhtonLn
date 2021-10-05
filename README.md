@@ -22,3 +22,9 @@ Details about the Number type
 * (2021/10/01) -- 除法与进制，按位操作
 * (2021/10/02) -- 小数与分数
 * (2021/10/04) -- 集合，bool
+
+>> C6DynamicType.md
+
+Introduction to Dynamic Type
+
+* (2021/10/05) -- 变量 --(引用)--> 对象
