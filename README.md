@@ -28,3 +28,4 @@ Details about the Number type
 Introduction to Dynamic Type
 
 * (2021/10/05) -- 变量 --(引用)--> 对象
+* (2021/10/06) -- 共享引用
