@@ -29,3 +29,9 @@ Introduction to Dynamic Type
 
 * (2021/10/05) -- 变量 --(引用)--> 对象
 * (2021/10/06) -- 共享引用
+
+>> C7String.md
+
+fundamentals on String type
+
+* (2021/10/10) -- 字符串基础
