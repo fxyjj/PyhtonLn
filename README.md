@@ -35,3 +35,4 @@ Introduction to Dynamic Type
 fundamentals on String type
 
 * (2021/10/10) -- 字符串基础
+* (2021/10/11) -- 转义与分片
