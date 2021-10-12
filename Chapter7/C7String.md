@@ -88,10 +88,20 @@ str[startIndex:endIndex(:step)]
 
 3. step: 步长，表示分片时引索步长，默认为1， eg: step=2， 则挑选偶数index的元素； step=3，每隔两个元素挑选分片； step为负则表示从尾至首分片。 
 
-**startIndex > endIndex, 否则分片为空，**
+**step 为正时 startIndex > endIndex, 否则分片为空，而step为负，startIndex < endIndex,step为负时将startIndex和endIndex的意义进行反转**
 **分片区域为[startIndex,endIndex), 前开后和的区间**
 
 *分片的规则与range(start,end ,step) 类似*
+
+**分片等同于使用分片对象进行引索,slice(start,end[,step]), 使用与range类似，创建一个分片对象**
+```
+>>> s = 'abcdefg'
+>>> s[1:5]
+'bcde'
+
+>>> s[slice(1,5)]
+'bcde'
+```
 
 * 字符串格式化表达
 
@@ -290,5 +300,19 @@ Sean\
 
 **三引号可以用来注释掉一些暂时不用的大段代码，在没有特定IDLE支持下不能通过快捷键快速在每行前加上和删除掉#时，尤为如此。**
 
+### 2.4 字符串转换
 
+* 字符串可以与数字类型进行转换。
 
+>> int(str,base)
+>> str(Integer)
+>> float(str)
+>> str(Float)
+
+* 字符串也可以与ASCII码相互转换
+```
+>>> ord('s')
+115
+>>> chr(115)
+'s'
+```

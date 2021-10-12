@@ -322,7 +322,7 @@ False
 False
 ```
 
-5. str.rstrip([chars]) *?*
+5. str.rstrip([chars]) *，可以用来去除字符串结尾处的换行府*
 
 Return a copy of the string with trailing characters removed. The chars argument is a string specifying the set of characters to be removed. *If omitted or None, the chars argument defaults to removing whitespace*. 
 **The chars argument is not a suffix; rather, all combinations of its values are stripped:**
