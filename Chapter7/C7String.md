@@ -316,3 +316,143 @@ Sean\
 >>> chr(115)
 's'
 ```
+
+## 3. 字符串方法
+（篇幅有限，只介绍常用的方法）
+
+### 3.1 修改字符串
+
+* 替换子字符串：由于string不能对其进行原位置修改，我们需要使用分片拼接的方法来修改子字符串，抑或是使用str.replace(old,new[,count])字符串方法来修改子字符串
+```
+>>> s = 'sapmmy'
+>>> s1 = s[:3]+'xx'+s[5:]
+>>> s1
+'sapxxy'
+>>> s
+'sapmmy'
+>>> s.replace('mm','xx')
+'sapxxy'
+>>> s
+'sapmmy'
+>>> s2 = s.replace('mm','xx')
+>>> s2
+'sapxxy'
+>>> s
+'sapmmy'
+```
+**str.replace()函数返回一个新的字符串对象，原字符对象没有被修改。这可能是利用他们在修改字符串的一个潜在缺陷，如果需要对一个超长字符串进行修改，可以将其转换成list**
+
+* 查找目标子串的偏移： 我们可以通过str.find(sub[,start,end])来查找目标子串在字符串中的偏移量。该方法在查找不到子串（子串不存在于字符串中时）时，返回-1。
+```
+>>> S = 'xxxxSPAMxxxxSPAMxxxx'
+
+>>> S.find('SPAM')
+4
+>>> S.find('SPAM',8)
+12
+>>> S.find('Se')
+-1
+```
+
+* str.join(iterable) & str.split(sep[,maxsplit])
+
+像之前谈到的，修改超长的字符串对象时，可以将其转换成list进行原位值修改后在转换成字符串，这样的操作需要使用到split和join这两个函数
+
+1. string.split(sep[,maxsplit]), 将字符串转换成一个数组，其中的元素为通过指定分割副分割成的字符串的不同部分. *注意如果字符串中没有合适的分割符，就使用list()内置函数来讲字符串分解成单个字符组成的数组*
+
+```
+>>> S = 'Sean'
+>>> S.split() #默认分割符是空白，（空格符，换行府，制表符）
+['Sean']
+
+>>> S.split('') #使用空的分割符会报错
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: empty separator
+
+>>> S.split(' ')
+['Sean']
+
+>>> list(S)
+['S', 'e', 'a', 'n']
+>>> S = 'hob,hacker,40'
+>>> S.split(',')
+['hob', 'hacker', '40']
+```
+
+*第二个参数指定最大的分割次数*
+
+```
+>>> S = 'S-e-a-n'
+>>> S.split('-'
+... )
+['S', 'e', 'a', 'n']
+>>> S.split('-',3)
+['S', 'e', 'a', 'n']
+>>> S.split('-',2)
+['S', 'e', 'a-n']
+>>> S.split('-',1)
+['S', 'e-a-n']
+>>> S.split('-',0)
+['S-e-a-n']
+>>> S.split('-',-1)
+['S', 'e', 'a', 'n']
+>>> S.split('-',-10)
+['S', 'e', 'a', 'n']
+```
+
+2. str.join(iterable): 该函数将一个可迭代对象通过str拼接成新的字符串。
+
+```
+>>> 'SPM'.join(['eggs','sauage','ham','toast'])
+'eggsSPMsauageSPMhamSPMtoast'
+
+```
+
+### 3.2 其他一个更为专一的支付串方法
+
+1. 检测大小写，或者标题格式，str.lower(),str.upper(),str.title(),str.isupper(),str.islower(),str.istitle() ... 参见C4
+``` 
+>>> S = 'asd,helim asdk,sfei'
+>>> S.islower()
+True
+>>> S.upper()
+'ASD,HELIM ASDK,SFEI'
+>>> S.isupper()
+False
+>>> S.istitle()
+False
+>>> S.title()
+'Asd,Helim Asdk,Sfei'
+>>> 
+```
+**返回新的字符串对象，原字符串并未被修改**
+
+2. 清除字符串右侧空白 str.rstrip() 一般用来清除*换行符*
+```
+>>> S = 'The Knight who sy Ni!\n'
+>>> S
+'The Knight who sy Ni!\n'
+>>> print(S)
+The Knight who sy Ni!
+
+>>> S.rstrip()
+'The Knight who sy Ni!'
+```
+
+3. str.endswith(suffix[,start[,end]]) & str.startswith(prefix[,start,[,end]])
+检测起始或末尾子字符串
+```
+>>> S = 'Sean say yes!\n'
+>>> S.startswith('S')
+True
+>>> S.startswith('S',1)
+False
+>>> S.endswith('\n',1)
+True
+>>> S.endswith('\n',_,-1)
+False
+>>> S.endswith('\n')
+True
+>>> 
+```
