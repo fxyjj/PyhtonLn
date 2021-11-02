@@ -417,7 +417,7 @@ ValueError: empty separator
 
 ```
 
-### 3.2 其他一个更为专一的支付串方法
+### 3.2 其他一个更为专一的字符串方法
 
 1. 检测大小写，或者标题格式，str.lower(),str.upper(),str.title(),str.isupper(),str.islower(),str.istitle() ... 参见C4
 ``` 
@@ -515,3 +515,31 @@ TypeError: %d format: a number is required, not str
 3. width: 被替换文本的最小字段宽度
 4. .precision: 浮点数设置小数点后显示的位数
 
+* 基于字典的格式化表达式
+
+字符串格式化允许左边的转换目标引用右边编写为字典的键值来提取对应的值。
+
+```
+>>> '%(qty)d more %(food)s'%{'qty':1,'food':'spam'}
+'1 more spam'
+```
+
+该技巧可与内置函数vars() 配合使用，这个函数返回的字典包含了他在被调用的地方所有存在的变量。
+
+```
+>>> qty = 10
+>>> food = 'spam'
+
+>>> vars
+<built-in function vars>
+
+>>> vars()
+{'__name__': '__main__', '__doc__': None, '__package__': None, '__loader__': <class '_frozen_importlib.BuiltinImporter'>, '__spec__': None, '__annotations__': {}, '__builtins__': <module 'builtins' (built-in)>, 'qty': 10, 'food': 'spam'}
+
+>>> '%(qty)d more %(food)s'%vars()
+'10 more spam' 
+```
+
+### 4.2 格式化方法调用
+
+ 
